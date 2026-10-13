@@ -211,7 +211,7 @@ h2.h{font-size:clamp(38px,6vw,72px);font-weight:700;letter-spacing:-.045em;line-
 .sizer{position:relative}
 .flow{position:absolute;left:0;top:0;transform-origin:0 0;display:flex;gap:72px;padding:210px 40px 150px 80px}
 .flow.land{gap:92px;align-items:flex-start}
-.wires{position:absolute;left:0;top:0;z-index:5;pointer-events:none;overflow:visible;transition:opacity .5s}
+.wires{position:absolute;left:0;top:0;z-index:0;pointer-events:none;overflow:visible;transition:opacity .5s}
 .wires .ln{fill:none;stroke:var(--lime);stroke-width:2.6;stroke-linecap:round;stroke-dasharray:1;stroke-dashoffset:1;transition:stroke-dashoffset 1.5s cubic-bezier(.3,.6,.2,1),opacity .25s,stroke .25s,stroke-width .25s;transition-delay:calc(var(--i)*.14s)}
 .flow.in .wires .ln{stroke-dashoffset:0}
 .wires .dec{stroke:var(--lime);opacity:.9}
@@ -226,7 +226,7 @@ h2.h{font-size:clamp(38px,6vw,72px);font-weight:700;letter-spacing:-.045em;line-
 .oe .wires .nd.dst{fill:var(--pink)}
 .oe .wires .ln.on,.oe .wires .nd.on{stroke:var(--pink-d)}
 .flow.final .wires{opacity:0}
-.wf{position:relative;width:168px;height:354px;flex:none;border:1.5px solid var(--wire);border-radius:26px;background:#fff;transition:transform .45s cubic-bezier(.2,.7,.2,1),border-color .3s,box-shadow .3s}
+.wf{position:relative;z-index:1;width:168px;height:354px;flex:none;border:1.5px solid var(--wire);border-radius:26px;background:#fff;transition:transform .45s cubic-bezier(.2,.7,.2,1),border-color .3s,box-shadow .3s}
 .wf.tgt{transform:translateY(-8px);border-color:var(--ink);box-shadow:0 18px 30px -16px rgba(20,20,20,.35)}
 .wf .wi{position:absolute;inset:0;padding:10px 11px;display:flex;flex-direction:column;gap:6px;transition:opacity .5s}
 .wf .shot{position:absolute;inset:-6px;width:calc(100% + 12px);height:calc(100% + 12px);object-fit:contain;opacity:0;transition:opacity .5s;filter:drop-shadow(0 16px 20px rgba(20,20,20,.22))}
@@ -1529,7 +1529,3 @@ document.addEventListener('click',e=>{const a=e.target.closest('a[data-proto]');
   $('#protoT').textContent=a.dataset.proto;$('#protoNew').href=a.getAttribute('href');pf.src=a.getAttribute('href');pd.showModal()});
 $('#protoX').addEventListener('click',()=>pd.close());
 pd.addEventListener('close',()=>{pf.src='about:blank'});
-})();
-</script>
-</body>
-</html>
