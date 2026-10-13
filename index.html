@@ -1323,17 +1323,24 @@ function makeFlow(o){
     wires.setAttribute('width',W);wires.setAttribute('height',H);wires.setAttribute('viewBox',`0 0 ${W} ${H}`);wires.innerHTML='';
     const P=frames.map(pos),G=[{a:0,b:P[0].x}];for(let i=1;i<frames.length;i++)G[i]={a:P[i-1].x+P[i-1].w,b:P[i].x};
     const cnt={},slot=g=>{cnt[g]=cnt[g]||0;return G[g].a+14+(cnt[g]++)*(g===0?13:11)};
-    const top=P[0].y,bot=Math.max(...P.map(p=>p.y+p.h)),lv={t:0,b:0};
-    [[[W*.06,56],[W*.26,56]],[[W*.78,56],[W*.9,56],[W*.9,120]],[[W*.04,H-90],[W*.04,H-50],[W*.2,H-50]],[[W*.46,H-52],[W*.66,H-52]]].forEach((pts,i)=>{
+    const top=P[0].y,bot=Math.max(...P.map(p=>p.y+p.h))+38,lv={t:0,b:0};
+    [[[W*.06,56],[W*.26,56]],[[W*.78,56],[W*.9,56],[W*.9,120]],[[W*.04,H-34],[W*.04,H-16],[W*.2,H-16]],[[W*.46,H-24],[W*.66,H-24]]].forEach((pts,i)=>{
       wires.appendChild(el('path',{d:rp(pts,22),class:'ln dec',pathLength:1,style:`--i:${i}`}));
       [pts[0],pts[pts.length-1]].forEach(q=>wires.appendChild(el('circle',{cx:q[0],cy:q[1],r:7.5,class:'nd',style:`--i:${i+1}`})))});
     LINES.forEach((L,i)=>{
-      const fp=pos($('#'+L.f)),tp=pos($('#'+L.t));
-      const s=[fp.x+fp.w/2,fp.y+fp.h/2],d=[L.ts==='l'?tp.x-11:tp.x+tp.w+11,tp.y+tp.h/2],gx=slot(L.sg);let pts;
-      if(L.sg===L.tg)pts=[s,[gx,s[1]],[gx,d[1]],d];
-      else{const gx2=slot(L.tg),cy=L.ch==='t'?top-26-(lv.t++)*22:bot+26+(lv.b++)*22;pts=[s,[gx,s[1]],[gx,cy],[gx2,cy],[gx2,d[1]],d]}
+      const fe=$('#'+L.f),te=$('#'+L.t),fp=pos(fe),tp=pos(te);
+      const sf=frames.indexOf(fe.closest('.wf')),tf=frames.indexOf(te.closest('.wf'));
+      const gx=slot(L.sg),gx2=L.sg===L.tg?gx:slot(L.tg);
+      const sy=fp.y+fp.h/2,ty=tp.y+tp.h/2;
+      const sc=P[sf],tc=P[tf];
+      // Anchor at the nearest screen edge, never draw a connector across UI text.
+      const sx=gx<sc.x+sc.w/2?sc.x-2:sc.x+sc.w+2;
+      const tx=gx2<tc.x+tc.w/2?tc.x-2:tc.x+tc.w+2;
+      const a=[sx,sy],d=[tx,ty];let pts;
+      if(L.sg===L.tg)pts=[a,[gx,sy],[gx,ty],d];
+      else{const cy=L.ch==='t'?top-26-(lv.t++)*22:bot+26+(lv.b++)*22;pts=[a,[gx,sy],[gx,cy],[gx2,cy],[gx2,ty],d]}
       wires.appendChild(el('path',{d:rp(pts,18),class:'ln',pathLength:1,style:`--i:${i}`,'data-k':i}));
-      wires.appendChild(el('circle',{cx:s[0],cy:s[1],r:8,class:'nd src','data-k':i,style:`--i:${i}`,tabindex:0,role:'button','aria-label':L.label}));
+      wires.appendChild(el('circle',{cx:a[0],cy:a[1],r:8,class:'nd src','data-k':i,style:`--i:${i}`,tabindex:0,role:'button','aria-label':L.label}));
       wires.appendChild(el('circle',{cx:d[0],cy:d[1],r:8,class:'nd dst','data-k':i,style:`--i:${i}`}));
     });
     $$('[data-k]',wires).forEach(n=>{const k=+n.dataset.k;n.addEventListener('mouseenter',()=>hl(k));n.addEventListener('mouseleave',()=>hl(-1));n.addEventListener('focus',()=>hl(k));n.addEventListener('blur',()=>hl(-1));n.addEventListener('click',()=>hl(hlK===k?-1:k));n.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();hl(hlK===k?-1:k)}})});
